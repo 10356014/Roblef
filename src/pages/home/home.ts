@@ -12,6 +12,7 @@ export class HomePage {
   r:any;
   interval:any;
   duration:any;
+  id:any;
 
   constructor(public navCtrl: NavController, public alertCtrl: AlertController, public http:Http) {
     this.readCallingNum();
@@ -36,8 +37,9 @@ export class HomePage {
       this.http.get('http://140.131.114.143:8080/project/data/readCallingNum.php', {search: params})			
         .subscribe(
           (data) => {
-            this.num=data.json()['numID'];
-            this.updateNumState();
+            this.num=data.json()['numPlate'];
+            this.id=data.json()['numID'];
+            this.updateCallState();
             console.log(this.num);
           }, error => {
               this.showAlert();
@@ -46,12 +48,11 @@ export class HomePage {
     }
 
     //------------------------------------------------------------------------
-     updateNumState(){
+    updateCallState(){
       let params = new FormData();
       params.append('callState', '0');
-      params.append('handleState', '1');
-      params.append('numID', this.num);
-      this.http.post('http://140.131.114.143:8080/project/data/updateNumState.php',params)
+      params.append('numID', this.id);
+      this.http.post('http://140.131.114.143:8080/project/data/updateCallState.php',params)
       .subscribe(data => {
           this.r=data.json()['data'];
           console.log(this.r);
